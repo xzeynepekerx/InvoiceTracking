@@ -14,6 +14,7 @@ namespace InvoiceTracking.Data.DataContext
 
         }
         public DbSet<Invoice> Invoice { get; set; }
+
         public DbSet<InvoiceNumberAllocation> InvoiceNumberAllocations { get; set; }
         public DbSet<InvoiceNumberRequest> InvoiceNumberRequests { get; set; }
         public DbSet<InvoiceNumberType> InvoiceNumberTypes { get; set; }
