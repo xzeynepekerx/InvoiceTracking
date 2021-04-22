@@ -13,6 +13,7 @@ namespace InvoiceTracking.Data.Implementation
     {
         private readonly ZeynepInvoiceTrackingContext _ctx;
 
+
         public InvoiceNumberAllocationRepository(ZeynepInvoiceTrackingContext ctx) : base(ctx)
         {
             _ctx = ctx;
