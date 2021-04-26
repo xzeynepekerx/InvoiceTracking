@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\InvoiceTracking.BusinessEngine\InvoiceTracking.BusinessEngine.csproj" />
     <ProjectReference Include="..\InvoiceTracking.Common\InvoiceTracking.Common.csproj" />
     <ProjectReference Include="..\InvoiceTracking.Data\InvoiceTracking.Data.csproj" />
   </ItemGroup>

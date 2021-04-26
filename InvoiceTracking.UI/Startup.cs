@@ -1,3 +1,5 @@
+using InvoiceTracking.BusinessEngine.Contracts;
+using InvoiceTracking.BusinessEngine.Implemetation;
 using InvoiceTracking.Common.Maps;
 using InvoiceTracking.Data.Contracts;
 using InvoiceTracking.Data.DataContext;
@@ -31,11 +33,14 @@ namespace InvoiceTracking.UI
             services.AddRazorPages();
             services.AddDbContext<ZeynepInvoiceTrackingContext>
                 (Options => Options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
-
             services.AddAutoMapper(typeof(Maps));
-            services.AddScoped<IInvoiceNumberAllocationRepository, InvoiceNumberAllocationRepository>();
-            services.AddScoped<IInvoiceNumberRequestRepository, InvoiceNumberRequestRepository>();
-            services.AddScoped<IInvoiceNumberTypeRepository, InvoiceNumberTypeRepository>();
+
+
+            ///services.AddScoped<IInvoiceNumberAllocationRepository, InvoiceNumberAllocationRepository>();
+            ///services.AddScoped<IInvoiceNumberRequestRepository, InvoiceNumberRequestRepository>();
+            /// services.AddScoped<IInvoiceNumberTypeRepository, InvoiceNumberTypeRepository>();
+
+            services.AddScoped<IInvoiceNumberTypeBusinessEngine, InvoiceNumberTypeBusinessEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
