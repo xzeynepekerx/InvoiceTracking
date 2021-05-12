@@ -39,8 +39,10 @@ namespace InvoiceTracking.UI
             ///services.AddScoped<IInvoiceNumberAllocationRepository, InvoiceNumberAllocationRepository>();
             ///services.AddScoped<IInvoiceNumberRequestRepository, InvoiceNumberRequestRepository>();
             /// services.AddScoped<IInvoiceNumberTypeRepository, InvoiceNumberTypeRepository>();
-
             services.AddScoped<IInvoiceNumberTypeBusinessEngine, InvoiceNumberTypeBusinessEngine>();
+            services.AddScoped<IUnitOfInvoice, UnitOfInvoice>();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

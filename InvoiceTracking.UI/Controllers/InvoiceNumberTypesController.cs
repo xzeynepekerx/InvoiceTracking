@@ -9,15 +9,21 @@ namespace InvoiceTracking.UI.Controllers
 {
     public class InvoiceNumberTypesController : Controller
     {
-        private readonly IInvoiceNumberTypeBusinessEngine _ınvoiceNumberTypeBusinessEngine;
+        private readonly IInvoiceNumberTypeBusinessEngine _InvoiceNumberTypeBusinessEngine;
 
         public InvoiceNumberTypesController(IInvoiceNumberTypeBusinessEngine ınvoiceNumberTypeBusinessEngine)
         {
-            _ınvoiceNumberTypeBusinessEngine = ınvoiceNumberTypeBusinessEngine;
+            _InvoiceNumberTypeBusinessEngine = ınvoiceNumberTypeBusinessEngine;
         }
 
         public IActionResult Index()
         {
+            var data = _InvoiceNumberTypeBusinessEngine.GetAllInvoiceNumberTypes();
+            if (data.IsSuccess)
+            {
+                var result = data.Data;
+                return View(result);
+            }
             return View();
         }
     }
