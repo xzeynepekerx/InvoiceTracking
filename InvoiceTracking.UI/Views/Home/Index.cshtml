@@ -1,8 +1,50 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Faturalar";
+    List<Invoice> invoices = ViewBag.invoices;
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Fatura Listesi</h1>
+</div>
+<div class="container">
+    @if (invoices.Count != 0)
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Fatura No</th>
+                    <th scope="col">Ad Soyad</th>
+                    <th scope="col">Tc</th>
+                    <th scope="col">Abone No</th>
+                    <th scope="col">Adres</th>
+                    <th scope="col">Fatura Tipi</th>
+                    <th scope="col">Tutar</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var invoice in invoices)
+                {
+                    <tr>
+                        <td>@invoice.InvoiceNo</td>
+                        <td>@invoice.NameSurname</td>
+                        <td>@invoice.Tc</td>
+                        <td>@invoice.SubscriberNo</td>
+                        <td>@invoice.Address</td>
+                        <td>@(invoice.InvoiceType==1?"Bireysel":"Kurumsal")</td>
+                        <td>@invoice.Price</td>
+                        <td><a href="/DeleteInvoice?InvoiceNo=@invoice.InvoiceNo" class="btn btn-danger" onclick="return confirm('Silmek istediğinizden emin misiniz?');">Sil</a></td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <center>
+            Herhangi bir fatura yok.<br />
+            <a href="/AddInvoice" class="btn btn-success">Fatura Oluştur</a>
+        </center>
+    }
 </div>

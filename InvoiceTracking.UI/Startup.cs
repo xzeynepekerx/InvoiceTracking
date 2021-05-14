@@ -1,22 +1,13 @@
-using InvoiceTracking.BusinessEngine.Contracts;
-using InvoiceTracking.BusinessEngine.Implemetation;
-using InvoiceTracking.Common.Maps;
-using InvoiceTracking.Data.Contracts;
-using InvoiceTracking.Data.DataContext;
-using InvoiceTracking.Data.Implementation;
+using InvoiceTracking.UI.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 
-namespace InvoiceTracking.UI
+namespace FaturaTakipSistemi
 {
     public class Startup
     {
@@ -30,19 +21,16 @@ namespace InvoiceTracking.UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddDbContext<ZeynepInvoiceTrackingContext>
-                (Options => Options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
-            services.AddAutoMapper(typeof(Maps));
+            services.AddControllersWithViews();
 
-
-            ///services.AddScoped<IInvoiceNumberAllocationRepository, InvoiceNumberAllocationRepository>();
-            ///services.AddScoped<IInvoiceNumberRequestRepository, InvoiceNumberRequestRepository>();
-            /// services.AddScoped<IInvoiceNumberTypeRepository, InvoiceNumberTypeRepository>();
-            services.AddScoped<IInvoiceNumberTypeBusinessEngine, InvoiceNumberTypeBusinessEngine>();
-            services.AddScoped<IUnitOfInvoice, UnitOfInvoice>();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddRazorPages();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                   .AddCookie(options =>
+                   {
+                       options.LoginPath = "/Login";
+                   });
+            var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true).Build();
+            services.Configure<LoginForm>(options => config.GetSection("LoginForm").Bind(options));
+            services.Configure<DbConnection>(options => config.GetSection("DbConnection").Bind(options));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,14 +51,17 @@ namespace InvoiceTracking.UI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{action=Index}/{id?}", new { controller = "Home", action = "Index" });
             });
+
+
         }
     }
 }
