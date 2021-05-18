@@ -23,6 +23,7 @@ namespace InvoiceTracking.UI.Controllers
             _connectionString = dbConnection.Value.ConnectionString;
         }
         [Authorize]
+
         public IActionResult Index()
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
@@ -40,6 +41,22 @@ namespace InvoiceTracking.UI.Controllers
         {
             return View();
         }
+
+        [Authorize]
+        public IActionResult UpdateInvoice(string InvoiceNo)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("@InvoiceNo", InvoiceNo);
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                var result = sqlConnection.Query<Invoice>("select * from Invoices where InvoiceNo=@InvoiceNo", parameters).ToList();
+
+                ViewBag.invoices = result;
+            }
+            return View();
+        }
+
+
 
         [Authorize]
         public IActionResult DeleteInvoice(string InvoiceNo)
@@ -67,23 +84,34 @@ namespace InvoiceTracking.UI.Controllers
         {
             try
             {
-                DynamicParameters parameters = new DynamicParameters();
-                parameters.Add("@InvoiceNo", invoice.InvoiceNo);
-                parameters.Add("@NameSurname", invoice.NameSurname);
-                parameters.Add("@Tc", invoice.Tc);
-                parameters.Add("@SubscriberNo", invoice.SubscriberNo);
-                parameters.Add("@Address", invoice.Address);
-                parameters.Add("@InvoiceType", invoice.InvoiceType);
-                parameters.Add("@Price", invoice.Price);
-                using (var sqlConnection = new SqlConnection(_connectionString))
+                if (IsInvoiceThere(invoice.InvoiceNo))
                 {
-                    var result = sqlConnection.Query<Invoice>(@"
-                    insert into Invoices 
-                    (InvoiceNo,NameSurname,Tc,SubscriberNo,Address,InvoiceType,Price) values 
-                    (@InvoiceNo,@NameSurname,@Tc,@SubscriberNo,@Address,@InvoiceType,@Price)", parameters);
-
+                    TempData["error"] = "İlgili Fatura numarsına ait kayıt bulunmaktadır. Lütfen kontrol ediniz.";
                 }
-                return Redirect("/");
+                else
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@InvoiceNo", invoice.InvoiceNo);
+                    parameters.Add("@NameSurname", invoice.NameSurname);
+                    parameters.Add("@Tc", invoice.Tc);
+                    parameters.Add("@SubscriberNo", invoice.SubscriberNo);
+                    parameters.Add("@Address", invoice.Address);
+                    parameters.Add("@InvoiceType", invoice.InvoiceType);
+                    parameters.Add("@Price", invoice.Price);
+                    parameters.Add("@InvoiceDate", invoice.InvoiceDate);
+                    parameters.Add("@InvoiceStatus", invoice.InvoiceStatus);
+                    parameters.Add("@InvoiceStatusText", invoice.InvoiceStatusText);
+                    using (var sqlConnection = new SqlConnection(_connectionString))
+                    {
+                        var result = sqlConnection.Query<Invoice>(@"
+                    insert into Invoices 
+                    (InvoiceNo,NameSurname,Tc,SubscriberNo,Address,InvoiceType,Price,InvoiceDate,InvoiceStatus,InvoiceStatusText) values 
+                    (@InvoiceNo,@NameSurname,@Tc,@SubscriberNo,@Address,@InvoiceType,@Price,@InvoiceDate,@InvoiceStatus,@InvoiceStatusText)", parameters);
+
+                    }
+                    return Redirect("/");
+                }
+
             }
             catch (Exception ex)
             {
@@ -91,6 +119,44 @@ namespace InvoiceTracking.UI.Controllers
             }
             return View();
         }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult UpdateInvoice(Invoice invoice)
+        {
+            try
+            {
+               
+                    DynamicParameters parameters = new DynamicParameters();
+                    parameters.Add("@InvoiceNo", invoice.InvoiceNo);
+                    parameters.Add("@NameSurname", invoice.NameSurname);
+                    parameters.Add("@Tc", invoice.Tc);
+                    parameters.Add("@SubscriberNo", invoice.SubscriberNo);
+                    parameters.Add("@Address", invoice.Address);
+                    parameters.Add("@InvoiceType", invoice.InvoiceType);
+                    parameters.Add("@Price", invoice.Price);
+                    parameters.Add("@InvoiceDate", invoice.InvoiceDate);
+                    parameters.Add("@InvoiceStatus", invoice.InvoiceStatus);
+                    parameters.Add("@InvoiceStatusText", invoice.InvoiceStatusText);
+                    using (var sqlConnection = new SqlConnection(_connectionString))
+                    {
+                        var result = sqlConnection.Query<Invoice>(@"
+                    update Invoices set NameSurname=@NameSurname,Tc=@Tc,SubscriberNo=@SubscriberNo,Address=@Address,InvoiceType=@InvoiceType,Price=@Price,
+                                        InvoiceDate=@InvoiceDate,InvoiceStatus=@InvoiceStatus,InvoiceStatusText=@InvoiceStatusText
+                            where InvoiceNo=@InvoiceNo", parameters);
+
+                    }
+                    return Redirect("/");
+                
+
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+            return View();
+        }
+
         public IActionResult Login()
         {
             return View();
@@ -121,6 +187,29 @@ namespace InvoiceTracking.UI.Controllers
             TempData["error"] = $"Kullanıcı adı veya parola yanlış.";
             return View();
         }
+
+        public bool IsInvoiceThere(string InvoiceNo)
+        {
+            bool durum = false;
+            try
+            {
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@InvoiceNo", InvoiceNo);
+                using (var sqlConnection = new SqlConnection(_connectionString))
+                {
+                    var result = sqlConnection.Query<Invoice>("select InvoiceNo from Invoices where InvoiceNo=@InvoiceNo", parameters);
+                    if (result.ToList().Count>0)
+                    {
+                        durum = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = ex.Message;
+            }
+
+            return durum;
+        }
     }
 }
-

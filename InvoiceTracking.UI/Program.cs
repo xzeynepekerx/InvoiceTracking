@@ -1,3 +1,4 @@
+using FaturaTakipSistemi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 

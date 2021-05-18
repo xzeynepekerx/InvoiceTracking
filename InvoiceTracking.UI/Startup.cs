@@ -6,8 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
-namespace FaturaTakipSistemi
+namespace InvoiceTracking
 {
     public class Startup
     {
@@ -21,6 +23,7 @@ namespace FaturaTakipSistemi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.BasicLatin, UnicodeRanges.Latin1Supplement, UnicodeRanges.LatinExtendedA }));
             services.AddControllersWithViews();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -31,6 +34,7 @@ namespace FaturaTakipSistemi
             var config = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json", optional: true).Build();
             services.Configure<LoginForm>(options => config.GetSection("LoginForm").Bind(options));
             services.Configure<DbConnection>(options => config.GetSection("DbConnection").Bind(options));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

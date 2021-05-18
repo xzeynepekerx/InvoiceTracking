@@ -18,23 +18,29 @@
                     <th scope="col">Abone No</th>
                     <th scope="col">Adres</th>
                     <th scope="col">Fatura Tipi</th>
+                    <th scope="col">Fatura Tarihi</th>
+                    <th scope="col">Fatura Durumu</th>
                     <th scope="col">Tutar</th>
+                    <th scope="col"></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var invoice in invoices)
                 {
-                    <tr>
-                        <td>@invoice.InvoiceNo</td>
-                        <td>@invoice.NameSurname</td>
-                        <td>@invoice.Tc</td>
-                        <td>@invoice.SubscriberNo</td>
-                        <td>@invoice.Address</td>
-                        <td>@(invoice.InvoiceType==1?"Bireysel":"Kurumsal")</td>
-                        <td>@invoice.Price</td>
-                        <td><a href="/DeleteInvoice?InvoiceNo=@invoice.InvoiceNo" class="btn btn-danger" onclick="return confirm('Silmek istediğinizden emin misiniz?');">Sil</a></td>
-                    </tr>
+                <tr>
+                    <td>@invoice.InvoiceNo</td>
+                    <td>@invoice.NameSurname</td>
+                    <td>@invoice.Tc</td>
+                    <td>@invoice.SubscriberNo</td>
+                    <td>@invoice.Address</td>
+                    <td>@(invoice.InvoiceType==1?"Bireysel":"Kurumsal")</td>
+                    <td>@invoice.InvoiceDate</td>
+                    <td>@invoice.InvoiceStatusText</td>
+                    <td>@invoice.Price</td>
+                    <td><a href="/UpdateInvoice?InvoiceNo=@invoice.InvoiceNo" class="btn btn-warning" >Güncelle</a></td>
+                    <td><a href="/DeleteInvoice?InvoiceNo=@invoice.InvoiceNo" class="btn btn-danger" onclick="return confirm('Silmek istediğinizden emin misiniz?');">Sil</a></td>
+                </tr>
                 }
 
             </tbody>

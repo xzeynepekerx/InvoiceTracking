@@ -1,6 +1,8 @@
-ï»¿@{
-    ViewData["Title"] = "Fatura Ekle";
+@{
+    ViewData["Title"] = "Fatura Güncelle";
+    List<Invoice> invoices = ViewBag.invoices;
 }
+
 
 <div class="cotainer">
     <div class="row justify-content-center">
@@ -12,37 +14,37 @@
                 </div>
             }
             <div class="card">
-                <div class="card-header">Fatura Ekle</div>
+                <div class="card-header">@Html.Raw("Fatura Güncelle")</div>
                 <div class="card-body">
                     <form action="" method="post">
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Fatura No</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="InvoiceNo" required>
+                                <input type="text" class="form-control" name="InvoiceNo" value="@invoices[0].InvoiceNo" required disabled>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Ad Soyad</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="NameSurname" required>
+                                <input type="text" class="form-control" name="NameSurname" value="@invoices[0].NameSurname" required>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-4 col-form-label text-md-right">TC Kimlik NumarasÄ±</label>
+                            <label class="col-md-4 col-form-label text-md-right">@Html.Raw("TC Kimlik Numarasý")</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="Tc" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="11" required>
+                                <input type="text" class="form-control" name="Tc" value="@invoices[0].Tc" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="11" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Abone No</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="SubscriberNo" required>
+                                <input type="text" class="form-control" name="SubscriberNo" value="@invoices[0].SubscriberNo" required>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Fatura Tarihi</label>
                             <div class="col-md-6">
-                                <input type="datetime" class="form-control" name="InvoiceDate" required>
+                                <input type="datetime" class="form-control" name="InvoiceDate" value="@invoices[0].InvoiceDate" required>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -50,16 +52,16 @@
 
                             <div class="col-md-6">
                                 <select class="form-control" id="InvoiceStatuVal" onchange='document.getElementById("InvoiceStatus").value=this.value; document.getElementById("InvoiceStatusText").value=this.options[this.selectedIndex].text;'>
-                                    <option value="PaidOK" selected>Ã–dendi</option>
-                                    <option value="PaidNOK">Ã–denecek</option>
-                                    <option value="Overdue">Vadesi GeÃ§miÅŸ</option>
+                                    <option value="PaidOK" selected>Odendi</option>
+                                    <option value="PaidNOK">Odenecek</option>
+                                    <option value="Overdue">Vadesi Gecmis</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Adres</label>
                             <div class="col-md-6">
-                                <input type="text" class="form-control" name="Address">
+                                <input type="text" class="form-control" value="@invoices[0].Address" name="Address">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -83,15 +85,15 @@
                         <div class="form-group row">
                             <label class="col-md-4 col-form-label text-md-right">Tutar</label>
                             <div class="col-md-6">
-                                <input type="number" class="form-control" name="Price" min="0.00" max="10000.00" step="0.01" required>
+                                <input type="number" class="form-control" name="Price" value="@invoices[0].Price.ToString().Replace(',','.')" min="0.00" max="10000.00" step="0.01" required>
                             </div>
                         </div>
-                        <input type="hidden" id="InvoiceStatus" name="InvoiceStatus" value="PaidOK" />
-                        <input type="hidden" id="InvoiceStatusText" name="InvoiceStatusText" value="Ã–dendi" />
+                        <input type="hidden" id="InvoiceStatus" value="@invoices[0].InvoiceStatus" name="InvoiceStatus" />
+                        <input type="hidden" id="InvoiceStatusText" value="@invoices[0].InvoiceStatusText" name="InvoiceStatusText" />
 
                         <div class="col-md-6 offset-md-4">
                             <button type="submit" class="btn btn-primary">
-                                Kaydet
+                                Güncelle
                             </button>
                         </div>
                     </form>
