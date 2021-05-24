@@ -17,4 +17,5 @@ namespace InvoiceTracking.UI
                     webBuilder.UseStartup<Startup>();
                 });
     }
+
 }
