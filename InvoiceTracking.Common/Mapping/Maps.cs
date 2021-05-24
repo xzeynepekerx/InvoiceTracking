@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using InvoiceTracking.Common.VModels;
 using InvoiceTracking.Data.DbModels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace InvoiceTracking.Common.Maps
 {
